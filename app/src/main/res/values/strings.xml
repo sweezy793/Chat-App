@@ -8,4 +8,9 @@
     <string name="all_users">All Users</string>
     <string name="settings">Settings</string>
     <string name="create_a_new_account">Create a new account</string>
+    <string name="already_have_an_account">Already have an account</string>
+    <string name="welcome_to_lapit_chat">Welcome to Lapit Chat</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
 </resources>
