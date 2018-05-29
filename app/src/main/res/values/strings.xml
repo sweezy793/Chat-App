@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lapit Chat</string>
+    <string name="need_a_new_account">Need a new Account ?</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_out">Log Out</string>
+    <string name="all_users">All Users</string>
+    <string name="settings">Settings</string>
+</resources>
