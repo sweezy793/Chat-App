@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mToolbar=(android.support.v7.widget.Toolbar)findViewById(R.id.register_toolbar);
+        mToolbar=(android.support.v7.widget.Toolbar)findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,8 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         mDisplayName=(TextInputLayout)findViewById(R.id.reg_display_name);
-        mEmail=(TextInputLayout)findViewById(R.id.reg_email);
-        mPassword=(TextInputLayout)findViewById(R.id.reg_password);
+        mEmail=(TextInputLayout)findViewById(R.id.login_email);
+        mPassword=(TextInputLayout)findViewById(R.id.login_password);
         mCreateBtn=(Button)findViewById(R.id.reg_create_btn);
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
