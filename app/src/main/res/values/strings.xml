@@ -17,4 +17,8 @@
     <string name="change_profile_photo">Change profile photo</string>
     <string name="hello_there">Hello There!</string>
     <string name="display_name">Display Name</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="status">Status</string>
+
+
 </resources>
