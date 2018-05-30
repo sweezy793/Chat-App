@@ -13,4 +13,8 @@
     <string name="login_to_your_account">Login to your account</string>
     <string name="login">Login</string>
     <string name="create_account">Create Account</string>
+    <string name="change_status">change status</string>
+    <string name="change_profile_photo">Change profile photo</string>
+    <string name="hello_there">Hello There!</string>
+    <string name="display_name">Display Name</string>
 </resources>
