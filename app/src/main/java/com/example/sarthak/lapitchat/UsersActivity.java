@@ -1,6 +1,7 @@
 package com.example.sarthak.lapitchat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,12 +62,26 @@ public class UsersActivity extends AppCompatActivity {
 
 
             @Override
-            protected void populateViewHolder(UsersViewHolder usersViewHolder, Users users, int i)
+            protected void populateViewHolder(UsersViewHolder usersViewHolder, Users users, int position)
             {
 
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setUserStatus(users.getStatus());
                 usersViewHolder.setUserImage(users.getThumb_image(),getApplicationContext());
+
+                final String user_id=getRef(position).getKey();
+
+                usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent profile_intent=new Intent(UsersActivity.this,ProfileActivity.class);
+                        profile_intent.putExtra("user_id",user_id);
+                        startActivity(profile_intent);
+
+
+                    }
+                });
 
 
             }
