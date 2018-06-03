@@ -16,9 +16,14 @@
     <string name="change_status">change status</string>
     <string name="change_profile_photo">Change profile photo</string>
     <string name="hello_there">Hello There!</string>
-    <string name="display_name">Display Name</string>
+
     <string name="save_changes">Save Changes</string>
     <string name="status">Status</string>
+    <string name="display_name">Display Name</string>
+    <string name="user_status">User Status</string>
+    <string name="total_friends">Total Friends</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="decline_friend_request">Decline Friend Request</string>
 
 
 </resources>
