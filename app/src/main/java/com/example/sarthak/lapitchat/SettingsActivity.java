@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -81,13 +83,14 @@ public class SettingsActivity extends AppCompatActivity {
         String current_uid=mCurrentUser.getUid();
 
         mUserDatabase=mFirebaseDatabase.getReference().child("Users").child(current_uid);
+        mUserDatabase.keepSynced(true);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+                final String image = dataSnapshot.child("image").getValue().toString();
                 String status = dataSnapshot.child("status").getValue().toString();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
@@ -96,8 +99,19 @@ public class SettingsActivity extends AppCompatActivity {
 
                 if (!image.equals("default")) {
 
-                    Picasso.get().load(image).placeholder(R.drawable.def_prof).into(mDisplayImage);
+                    //
+                    Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.def_prof)
+                            .into(mDisplayImage, new Callback() {
+                                @Override
+                                public void onSuccess() {
 
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Picasso.get().load(image).placeholder(R.drawable.def_prof).into(mDisplayImage);
+                                }
+                            });
                 }
             }
 

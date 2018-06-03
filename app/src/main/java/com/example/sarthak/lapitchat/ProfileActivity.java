@@ -32,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mProfileName,mProfileStatus,mProfileFriendsCount;
     private ImageView mProfileImage;
     private Button mProfileSendReqBtn;
+    private Button mDeclineBtn;
 
     private DatabaseReference mUsersDatabase;
     private DatabaseReference mFriendReqDatabase;
@@ -62,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
         mProfileStatus=(TextView)findViewById(R.id.profile_status);
         mProfileFriendsCount=(TextView)findViewById(R.id.profile_totalFriends);
         mProfileSendReqBtn=(Button)findViewById(R.id.profile_send_req_btn);
+        mDeclineBtn=(Button)findViewById(R.id.profile_decline_req_btn);
 
         mCurrentState="not_friends";
 
@@ -84,6 +86,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                 Picasso.get().load(image).placeholder(R.drawable.def_prof).into(mProfileImage);
 
+                if(mCurrent_user.getUid().equals(user_id)){
+
+                    mDeclineBtn.setEnabled(false);
+                    mDeclineBtn.setVisibility(View.INVISIBLE);
+
+                    mProfileSendReqBtn.setEnabled(false);
+                    mProfileSendReqBtn.setVisibility(View.INVISIBLE);
+
+                }
+
 
 
                 //-----------------------FRIENDS LIST/REQUEST FEATURE------------------------
@@ -100,20 +112,53 @@ public class ProfileActivity extends AppCompatActivity {
 
                                 mCurrentState="req_received";
                                 mProfileSendReqBtn.setText("Accept Friend Request");
+
+                                mDeclineBtn.setVisibility(View.VISIBLE);
+                                mDeclineBtn.setEnabled(true);
                             }
                             else if(req_type.equals("sent"))
                             {
                                 mCurrentState="req_sent";
                                 mProfileSendReqBtn.setText("Cancel Friend Request");
+
+                                mDeclineBtn.setVisibility(View.INVISIBLE);
+                                mDeclineBtn.setEnabled(false);
                             }
+                            mProgressDialog.dismiss();
+                        }
+                        else
+                        {
+                            mFriendDatabase.child(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.hasChild(user_id))
+                                    {
+                                        mCurrentState="friends";
+                                        mProfileSendReqBtn.setText("Unfriend");
+
+                                        mDeclineBtn.setVisibility(View.INVISIBLE);
+                                        mDeclineBtn.setEnabled(false);
+
+
+                                    }
+                                    mProgressDialog.dismiss();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    mProgressDialog.dismiss();
+
+                                }
+                            });
                         }
 
 
-                        mProgressDialog.dismiss();
+
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        mProgressDialog.dismiss();
 
                     }
                 });
@@ -129,6 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                mProgressDialog.dismiss();
 
             }
         });
@@ -191,6 +237,9 @@ public class ProfileActivity extends AppCompatActivity {
                                     mCurrentState="not_friends";
                                     mProfileSendReqBtn.setText("Send Friend Request");
 
+                                    mDeclineBtn.setVisibility(View.INVISIBLE);
+                                    mDeclineBtn.setEnabled(false);
+
 
 
                                 }
@@ -224,6 +273,9 @@ public class ProfileActivity extends AppCompatActivity {
                                                         mCurrentState="friends";
                                                         mProfileSendReqBtn.setText("Unfriend");
 
+                                                        mDeclineBtn.setVisibility(View.INVISIBLE);
+                                                        mDeclineBtn.setEnabled(false);
+
 
 
                                                     }
@@ -236,6 +288,33 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         });
                     }
+
+                //-----------------------------------UNFRIEND----------------------
+                    if(mCurrentState.equals("friends")) {
+
+                        mFriendDatabase.child(mCurrent_user.getUid()).child(user_id)
+                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mFriendReqDatabase.child(user_id).child(mCurrent_user.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mProfileSendReqBtn.setEnabled(true);
+                                        mCurrentState = "not_friends";
+                                        mProfileSendReqBtn.setText("Send Friend Request");
+
+                                        mDeclineBtn.setVisibility(View.INVISIBLE);
+                                        mDeclineBtn.setEnabled(false);
+                                    }
+                                });
+
+                            }
+                        });
+
+
+                    }
+
+
 
                 }
             });

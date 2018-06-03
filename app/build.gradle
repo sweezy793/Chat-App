@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.firebaseui:firebase-ui-database:1.2.0'
     implementation 'com.iceteck.silicompressorr:silicompressor:2.1'
+    implementation 'com.squareup.okhttp:okhttp:2.5.0'
     implementation 'id.zelory:compressor:2.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.12'

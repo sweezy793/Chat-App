@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,6 +40,7 @@ public class UsersActivity extends AppCompatActivity {
 
 
         mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
+        mUsersDatabase.keepSynced(true);
 
         mUsersList=(RecyclerView)findViewById(R.id.users_list);
         mUsersList.setHasFixedSize(true);
@@ -114,10 +117,22 @@ public class UsersActivity extends AppCompatActivity {
 
         }
 
-        public void setUserImage(String thumb_image,Context ctx)
+        public void setUserImage(final String thumb_image, Context ctx)
         {
-            CircleImageView userImageView=(CircleImageView) mView.findViewById(R.id.user_single_img);
-            Picasso.get().load(thumb_image).placeholder(R.drawable.def_prof).into(userImageView);
+            final CircleImageView userImageView=(CircleImageView) mView.findViewById(R.id.user_single_img);
+            //
+            Picasso.get().load(thumb_image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.def_prof)
+                    .into(userImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load(thumb_image).placeholder(R.drawable.def_prof).into(userImageView);
+                        }
+                    });
         }
     }
 }
