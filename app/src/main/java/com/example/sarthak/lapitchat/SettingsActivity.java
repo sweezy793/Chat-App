@@ -58,6 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
     private Button mStatusBtn;
     private Button mImageBtn;
 
+    private DatabaseReference mUserRef;
+    private FirebaseAuth mAuth;
+
     private static final int PICK_IMAGE=1;
 
     private StorageReference mImageStorage;
@@ -159,6 +162,9 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

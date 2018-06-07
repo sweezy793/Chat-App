@@ -11,6 +11,8 @@ import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,12 +23,17 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TabLayout mTabLayout;
 
+    private DatabaseReference mUserRef;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+
+        mUserRef= FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
 
         mToolbar=(android.support.v7.widget.Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
@@ -51,6 +58,24 @@ public class MainActivity extends AppCompatActivity {
         {
             sendToStart();
         }
+        else
+        {
+            mUserRef.child("online").setValue(true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser!=null)
+        {
+            mUserRef.child("online").setValue(false);
+        }
+
+
     }
 
     private void sendToStart() {
