@@ -1,12 +1,16 @@
 package com.example.sarthak.lapitchat;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +26,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
     private List<Messages> mMessageList;
+    private FirebaseAuth mAuth;
     private DatabaseReference mUserDatabase;
 
     public MessageAdapter(List<Messages> mMessageList) {
@@ -60,7 +65,28 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(final MessageViewHolder viewHolder, int i) {
 
+        mAuth = FirebaseAuth.getInstance();
+
+        String current_user_id=mAuth.getCurrentUser().getUid();
+
         Messages c = mMessageList.get(i);
+
+        String from_user=c.getFrom();
+
+        if(from_user.equals(current_user_id))
+        {
+                viewHolder.messageText.setBackgroundResource(R.color.colorAccent);
+                viewHolder.messageText.setTextColor(Color.WHITE);
+
+
+        }
+        else
+        {
+            viewHolder.messageText.setBackgroundResource(R.drawable.message_text_background);
+            viewHolder.messageText.setTextColor(Color.WHITE);
+
+
+        }
 
             viewHolder.messageText.setText(c.getMessage());
 

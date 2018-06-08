@@ -8,6 +8,23 @@ package com.example.sarthak.lapitchat;
         private Boolean seen;
         private long time;
         private String type;
+        private String from;
+
+        public String getFrom() {
+            return from;
+        }
+
+        public void setFrom(String from) {
+            this.from = from;
+        }
+
+
+
+        public Messages(String from) {
+            this.from = from;
+        }
+
+
 
         public Messages(String message, Boolean seen, long time, String type) {
             this.message = message;
