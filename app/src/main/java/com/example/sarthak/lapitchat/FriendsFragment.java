@@ -1,7 +1,10 @@
 package com.example.sarthak.lapitchat;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,25 +91,60 @@ public class FriendsFragment extends Fragment {
 
                 friendsViewHolder.setDate(friends.getDate());
 
-                String list_user_id=getRef(i).getKey();
+                final String list_user_id=getRef(i).getKey();
 
                 mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String userName=dataSnapshot.child("name").getValue().toString();
+                        final String userName=dataSnapshot.child("name").getValue().toString();
                         String userThumb=dataSnapshot.child("thumb_image").getValue().toString();
 
 
                         if(dataSnapshot.hasChild("online"))
                         {
-                            Boolean userOnline=(Boolean) dataSnapshot.child("online").getValue();
+                            String userOnline=dataSnapshot.child("online").getValue().toString();
                             friendsViewHolder.setUserOnline(userOnline);
 
                         }
 
                         friendsViewHolder.setName(userName);
                         friendsViewHolder.setUserImage(userThumb,getContext());
+
+                        friendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                CharSequence options[]=new CharSequence[]{"Open Profile","Send Message"};
+
+                                AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                                builder.setTitle("Select Action");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+
+                                        //Click event for each item
+                                        if(i==0)
+                                        {
+                                            Intent profileIntent=new Intent(getContext(),ProfileActivity.class);
+                                            profileIntent.putExtra("user_id",list_user_id);
+                                            startActivity(profileIntent);
+                                        }
+                                        if(i==1)
+                                        {
+                                            Intent chatIntent=new Intent(getContext(),ChatActivity.class);
+                                            chatIntent.putExtra("user_id",list_user_id);
+                                            chatIntent.putExtra("user_name",userName);
+                                            startActivity(chatIntent);
+                                        }
+
+                                    }
+                                });
+
+                                builder.show();
+
+                            }
+                        });
 
 
                     }
@@ -165,11 +203,11 @@ public class FriendsFragment extends Fragment {
                     });
         }
 
-        public void setUserOnline(Boolean online_status)
+        public void setUserOnline(String online_status)
         {
             ImageView userOnlineView=(ImageView)mView.findViewById(R.id.user_single_online_icon);
 
-            if(online_status==true)
+            if(online_status.equals("true"))
             {
                 userOnlineView.setVisibility(View.VISIBLE);
             }
