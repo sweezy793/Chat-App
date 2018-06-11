@@ -57,6 +57,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             messageText = (TextView) view.findViewById(R.id.message_text_layout);
             profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
+            displayName = (TextView) view.findViewById(R.id.name_text_layout);
+            messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
 
 
         }
@@ -73,9 +75,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         String from_user=c.getFrom();
 
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
+
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String name = dataSnapshot.child("name").getValue().toString();
+                String image = dataSnapshot.child("thumb_image").getValue().toString();
+
+                viewHolder.displayName.setText(name);
+
+                Picasso.get().load(image)
+                        .placeholder(R.drawable.def_prof).into(viewHolder.profileImage);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         if(from_user.equals(current_user_id))
         {
-                viewHolder.messageText.setBackgroundResource(R.color.colorAccent);
+                viewHolder.messageText.setBackgroundResource(R.drawable.sent_message_text_background);
                 viewHolder.messageText.setTextColor(Color.WHITE);
 
 
@@ -84,7 +108,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         {
             viewHolder.messageText.setBackgroundResource(R.drawable.message_text_background);
             viewHolder.messageText.setTextColor(Color.WHITE);
-
 
         }
 

@@ -1,6 +1,7 @@
 package com.example.sarthak.lapitchat;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,8 +22,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,11 +52,15 @@ public class ChatActivity extends AppCompatActivity {
     private EditText mChatMessageView;
 
     private RecyclerView mMessagesList;
+    private SwipeRefreshLayout mRefreshLayout;
 
     private final List<Messages> MessagesList=new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
     private DatabaseReference mMessageDatabase;
+
+    private static final int TOTAL_ITEMS_TO_LOAD=10;
+    private int mCurrentPage=1;
 
 
     @Override
@@ -102,6 +109,7 @@ public class ChatActivity extends AppCompatActivity {
         mAdapter=new MessageAdapter(MessagesList);
 
         mMessagesList=(RecyclerView)findViewById(R.id.messages_list);
+        mRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.message_swipe_layout);
 
         mLinearLayout=new LinearLayoutManager(this);
 
@@ -121,7 +129,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String online=dataSnapshot.child("online").getValue().toString();
-                String image=dataSnapshot.child("image").getValue().toString();
+                String image=dataSnapshot.child("thumb_image").getValue().toString();
+
+                Picasso.get().load(image)
+                        .placeholder(R.drawable.def_prof).into(mProfileImage);
 
                 if(online.equals("true"))
                 {
@@ -192,11 +203,29 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mCurrentPage++;
+
+                MessagesList.clear();
+
+
+                loadMessages();
+
+            }
+        });
+
     }
 
     private void loadMessages() {
 
-        mRootRef.child("messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
+        DatabaseReference messageRef=mRootRef.child("messages").child(mCurrentUserId).child(mChatUser);
+
+        Query messageQuery=messageRef.limitToLast(mCurrentPage*TOTAL_ITEMS_TO_LOAD);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
@@ -204,6 +233,10 @@ public class ChatActivity extends AppCompatActivity {
 
                 MessagesList.add(message);
                 mAdapter.notifyDataSetChanged();
+
+                mMessagesList.scrollToPosition(MessagesList.size()-1);
+
+                mRefreshLayout.setRefreshing(false);
 
             }
 
