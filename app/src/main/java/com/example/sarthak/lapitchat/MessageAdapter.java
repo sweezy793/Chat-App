@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -51,6 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CircleImageView profileImage;
         public TextView displayName;
         public ImageView messageImage;
+        private StorageReference mImageStorage;
 
         public MessageViewHolder(View view) {
             super(view);
@@ -59,6 +62,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
             displayName = (TextView) view.findViewById(R.id.name_text_layout);
             messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
+            mImageStorage= FirebaseStorage.getInstance().getReference();
+
 
 
         }
@@ -74,6 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Messages c = mMessageList.get(i);
 
         String from_user=c.getFrom();
+        String message_type = c.getType();
 
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
@@ -97,7 +103,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-        if(from_user.equals(current_user_id))
+        if(message_type.equals("text"))
+        {
+
+
+            if(from_user.equals(current_user_id))
+            {
+                viewHolder.messageText.setBackgroundResource(R.drawable.sent_message_text_background);
+                viewHolder.messageText.setTextColor(Color.WHITE);
+
+
+            }
+            else
+            {
+                viewHolder.messageText.setBackgroundResource(R.drawable.message_text_background);
+                viewHolder.messageText.setTextColor(Color.WHITE);
+
+            }
+
+            viewHolder.messageText.setText(c.getMessage());
+            viewHolder.messageImage.setVisibility(View.INVISIBLE);
+
+
+        }
+
+        else {
+
+            viewHolder.messageText.setVisibility(View.INVISIBLE);
+            Picasso.get().load(c.getMessage())
+                    .placeholder(R.drawable.def_prof).into(viewHolder.messageImage);
+
+        }
+
+       /* if(from_user.equals(current_user_id))
         {
                 viewHolder.messageText.setBackgroundResource(R.drawable.sent_message_text_background);
                 viewHolder.messageText.setTextColor(Color.WHITE);
@@ -114,7 +152,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             viewHolder.messageText.setText(c.getMessage());
 
 
-
+*/
 
     }
 
