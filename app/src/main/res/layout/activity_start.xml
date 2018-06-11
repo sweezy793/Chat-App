@@ -13,10 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="221dp"
-        android:text="@string/welcome_to_lapit_chat"
+        android:layout_marginBottom="300dp"
+        android:text="@string/welcome_to_whynotsapp"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/start_reg_btn"
@@ -24,7 +25,7 @@
         android:layout_height="59dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp"
+        android:layout_marginBottom="121dp"
         android:text="@string/need_a_new_account" />
 
     <Button
@@ -33,8 +34,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="131dp"
+        android:layout_marginBottom="191dp"
         android:background="@color/colorAccent"
         android:text="@string/already_have_an_account"
         android:textColor="@android:color/white" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="234dp"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="360dp"
+        app:srcCompat="@drawable/start" />
 </RelativeLayout>
