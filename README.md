@@ -31,6 +31,4 @@ https://drive.google.com/open?id=1DpeWMvaw3FIx6tygCcgnVv6UqC33Re4i
 * [Firebase](https://firebase.google.com/) 
 
 
-## Screenshots
- (Will add soon)
 
